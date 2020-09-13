@@ -22,4 +22,12 @@ Auth::routes(['verify' => true]);
 Route::middleware(['verified', 'auth'])->group(function(){
     Route::redirect('/', '/home');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
 });
+
+//Houses routes:
+Route::get('/houses', [App\Http\Controllers\HouseController::class, 'index']);
+Route::get('/houses/create', [App\Http\Controllers\HouseController::class, 'create']);
+Route::post('/houses/create', [App\Http\Controllers\HouseController::class, 'store']);
+Route::get('/houses/edit', [App\Http\Controllers\HouseController::class, 'edit']);
