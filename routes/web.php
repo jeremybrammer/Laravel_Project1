@@ -27,7 +27,11 @@ Route::middleware(['verified', 'auth'])->group(function(){
 });
 
 //Houses routes:
-Route::get('/houses', [App\Http\Controllers\HouseController::class, 'index']);
-Route::get('/houses/create', [App\Http\Controllers\HouseController::class, 'create']);
+Route::get('/houses', [App\Http\Controllers\HouseController::class, 'index'])->name('all-listings');
+Route::get('/houses/create', [App\Http\Controllers\HouseController::class, 'create'])->name('create-listing');
 Route::post('/houses/create', [App\Http\Controllers\HouseController::class, 'store']);
-Route::get('/houses/edit', [App\Http\Controllers\HouseController::class, 'edit']);
+Route::get('/houses/{house}/edit', [App\Http\Controllers\HouseController::class, 'edit'])->name('house.edit');
+Route::patch('/houses/{house}/update', [App\Http\Controllers\HouseController::class, 'update'])->name('house.update');
+Route::delete('/houses/{house}/delete', [App\Http\Controllers\HouseController::class, 'delete'])->name('house.delete');
+//Show user's own listing:
+Route::get('/houses/my-listings', [App\Http\Controllers\HouseController::class, 'myListings'])->name('my-listings');

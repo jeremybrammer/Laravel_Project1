@@ -1,0 +1,24 @@
+ul.house_listing{
+    padding-left: 0;
+}
+ul.house_listing li{
+    list-style-type: none;
+}
+.house_list_item_panel{
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgray;
+    /* background-color: lightyellow; */
+    padding: 0;
+    margin: 5px;
+    margin-bottom: 20px;
+}
+.house_list_item_panel .panel-heading, .house_list_item_panel .panel-body{
+    padding: 5px;
+}
+.house_list_item_panel .panel-heading{
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: lightgray;
+}

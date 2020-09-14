@@ -2,6 +2,12 @@
 
 @section('content')
 <div class="container">
+    <div class="row text-center">
+        <div class="col-sm-6 pull-left" style="margin-bottom: 5px;">
+            <a href="{{ route('my-listings') }}" role="button" class="btn btn-primary">Back to My Listings</a>
+        </div>
+        <div class="col-sm-6 pull-right" style="margin-bottom: 5px;"></div>
+    </div>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -28,18 +34,10 @@
                             <input type="text" class="form-control" name="address_city" />
                         </div>
 
-                        {{-- <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">State</span>
-                            </div>
-                            <input type="text" class="form-control" name="address_state" />
-                        </div> --}}
-
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">State</span>
                             </div>
-                            {{-- <input type="text" class="form-control" name="address_state" /> --}}
                             <select class="selectpicker" name="address_state">
                                 <option value="" selected="selected"></option>
                                 <option value="AL">Alabama</option>
@@ -95,9 +93,6 @@
                                 <option value="WY">Wyoming</option>
                             </select>
                         </div>
-
-
-
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
