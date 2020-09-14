@@ -19,19 +19,19 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
 
-Route::middleware(['verified', 'auth'])->group(function(){
-    Route::redirect('/', '/home');
+Route::redirect('/', '/home');
+
+Route::middleware(['verified'])->group(function(){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-
+    //Show all listings:
+    Route::get('/houses/all', [App\Http\Controllers\HouseController::class, 'allListings'])->name('house.all-listings');
+    //Houses resource controller route:
+    Route::resource('/houses', App\Http\Controllers\HouseController::class);
 });
 
-//Houses routes:
-Route::get('/houses', [App\Http\Controllers\HouseController::class, 'index'])->name('all-listings');
-Route::get('/houses/create', [App\Http\Controllers\HouseController::class, 'create'])->name('create-listing');
-Route::post('/houses/create', [App\Http\Controllers\HouseController::class, 'store']);
-Route::get('/houses/{house}/edit', [App\Http\Controllers\HouseController::class, 'edit'])->name('house.edit');
-Route::patch('/houses/{house}/update', [App\Http\Controllers\HouseController::class, 'update'])->name('house.update');
-Route::delete('/houses/{house}/delete', [App\Http\Controllers\HouseController::class, 'delete'])->name('house.delete');
-//Show user's own listing:
-Route::get('/houses/my-listings', [App\Http\Controllers\HouseController::class, 'myListings'])->name('my-listings');
+// Route::get('/houses', [App\Http\Controllers\HouseController::class, 'index'])->name('houses.index');
+// Route::get('/houses/create', [App\Http\Controllers\HouseController::class, 'create'])->name('houses.create');
+// Route::post('/houses/create', [App\Http\Controllers\HouseController::class, 'store'])->name('houses.store');
+// Route::get('/houses/{house}/edit', [App\Http\Controllers\HouseController::class, 'edit'])->name('houses.edit');
+// Route::patch('/houses/{house}/update', [App\Http\Controllers\HouseController::class, 'update'])->name('houses.update');
+// Route::delete('/houses/{house}/destroy', [App\Http\Controllers\HouseController::class, 'destroy'])->name('houses.destroy');

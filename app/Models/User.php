@@ -37,4 +37,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function houses(){
+        return $this->hasMany(House::class);
+    }
 }

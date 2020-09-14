@@ -15,6 +15,11 @@ class CreateHousesTable extends Migration
     {
         Schema::create('houses', function (Blueprint $table) {
             $table->id();
+
+            //Foreign key definition:
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->string('address_street', 200);
             $table->string('address_city', 200);
             $table->string('address_state', 2);

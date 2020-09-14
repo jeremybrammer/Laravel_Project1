@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row text-center" style="padding: 5px;">
             <div class="col-sm-6 pull-left" style="margin-bottom: 5px;">
-                <a href="{{ route('my-listings') }}" role="button" class="btn btn-primary">Back to My Listings</a>
+                <a href="{{ route('houses.index') }}" role="button" class="btn btn-primary">Back to My Listings</a>
             </div>
             <div class="col-sm-6 pull-right" style="margin-bottom: 5px;"></div>
         </div>
@@ -19,7 +19,7 @@
 
                         <x-flash-message />
 
-                        <form method="post" action="{{ route('house.update', $house->id) }}">
+                        <form method="post" action="{{ route('houses.update', $house->id) }}">
                             @csrf
                             @method('patch')
 

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row text-center">
         <div class="col-sm-6 pull-left" style="margin-bottom: 5px;">
-            <a href="{{ route('my-listings') }}" role="button" class="btn btn-primary">Back to My Listings</a>
+            <a href="{{ route('houses.index') }}" role="button" class="btn btn-primary">Back to My Listings</a>
         </div>
         <div class="col-sm-6 pull-right" style="margin-bottom: 5px;"></div>
     </div>
@@ -17,7 +17,7 @@
 
                     <x-flash-message />
 
-                    <form method="post" action="/houses/create">
+                    <form method="post" action="{{ route('houses.store') }}">
                         @csrf
 
                         <div class="input-group mb-3">
