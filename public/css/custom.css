@@ -22,3 +22,6 @@ ul.house_listing li{
     border-bottom-width: 1px;
     border-bottom-color: lightgray;
 }
+.invisibleBeforeLoad{
+    display: none !important;
+}

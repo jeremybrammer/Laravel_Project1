@@ -68,4 +68,21 @@ class HouseController extends Controller
         return view('houses.all-listings')->with('houses', $houses);
     }
 
+    //Ajax Routes:
+    public function allListingsAjax(){
+        $houses = House::all()->sortBy('created_at');
+        return response()->json($houses);
+    }
+
+    public function getListingsByZipCodeAjax($zipCode){
+        $houses = House::where('address_zip', 'LIKE', '%' . $zipCode .'%')->orderBy('created_at')->get();
+        return response()->json($houses);
+    }
+
+    public function getListingsByStateAjax($twoLetterState){
+        $twoLetterState = strtoupper($twoLetterState);
+        $houses = House::where('address_state', $twoLetterState)->orderBy('created_at')->get();
+        return response()->json($houses);
+    }
+
 }

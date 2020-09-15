@@ -23,8 +23,18 @@ Route::redirect('/', '/home');
 
 Route::middleware(['verified'])->group(function(){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
     //Show all listings:
     Route::get('/houses/all', [App\Http\Controllers\HouseController::class, 'allListings'])->name('house.all-listings');
+
+    //AJAX routes:
+    //Return all listings as JSON:
+    Route::get('/houses/allAsAjax', [App\Http\Controllers\HouseController::class, 'allListingsAjax'])->name('house.all-listings-ajax');
+    //Get listings by zip code.
+    Route::get('/houses/getListingsByZipCodeAjax/{zipCode}', [App\Http\Controllers\HouseController::class, 'getListingsByZipCodeAjax'])->name('house.get-by-zip-ajax');
+    //Get listings by upper case two-letter state.
+    Route::get('/houses/getListingsByStateAjax/{twoLetterState}', [App\Http\Controllers\HouseController::class, 'getListingsByStateAjax'])->name('house.get-by-state-ajax');
+
     //Houses resource controller route:
     Route::resource('/houses', App\Http\Controllers\HouseController::class);
 });
