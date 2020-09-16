@@ -74002,7 +74002,7 @@ HouseListingApp.controller("AllHousesGoogleMapsController", ['$scope', function 
 }]);
 HouseListingApp.controller("HouseDetailsGoogleMapsController", ['$scope', function ($scope) {
   $scope.initializeGoogleMap = function () {
-    var targetAddress = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '112 East Hazel Street, Clarence MO, 63437';
+    var targetAddress = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '1600 Pennsylvania Avenue NW, Washington, DC 20500';
     //Set parameters.
     var mapDivId = 'map'; //This is the div id the map will display in.
 

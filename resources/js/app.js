@@ -194,7 +194,7 @@ HouseListingApp.controller("AllHousesGoogleMapsController", ['$scope', function 
 
 HouseListingApp.controller("HouseDetailsGoogleMapsController", ['$scope', function ($scope) {
 
-    $scope.initializeGoogleMap = function(targetAddress = '112 East Hazel Street, Clarence MO, 63437'){
+    $scope.initializeGoogleMap = function(targetAddress = '1600 Pennsylvania Avenue NW, Washington, DC 20500'){
 
         //Set parameters.
         let mapDivId = 'map'; //This is the div id the map will display in.
