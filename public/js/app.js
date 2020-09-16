@@ -73889,7 +73889,7 @@ HouseListingApp.controller("HouseListingController", ['$scope', '$http', '$timeo
 HouseListingApp.controller("HouseListingSearchBarController", ['$scope', '$http', function ($scope, $http) {
   $scope.initSearchBar = function () {
     console.log('House listing search bar initializing...');
-    $scope.houseListingSearchBarOptions = ['All Listings', 'Search by Zip Code', 'Search by State'];
+    $scope.houseListingSearchBarOptions = ['All Listings', 'Search by Zip Code', 'Search by State Abbreviation'];
     $scope.houseListingSearchBarSelectedOptionKey = 0;
     $scope.searchInputFieldEnabled = false;
     $scope.searchValue = '';

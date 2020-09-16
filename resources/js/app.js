@@ -89,7 +89,7 @@ HouseListingApp.controller("HouseListingSearchBarController", ['$scope', '$http'
         $scope.houseListingSearchBarOptions = [
             'All Listings',
             'Search by Zip Code',
-            'Search by State'
+            'Search by State Abbreviation'
         ];
         $scope.houseListingSearchBarSelectedOptionKey = 0;
         $scope.searchInputFieldEnabled = false;
