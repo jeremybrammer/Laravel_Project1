@@ -32,7 +32,7 @@ HouseListingApp.controller("HouseListingController", ['$scope', '$http', '$timeo
         $scope.isLoading = true;
         $houseListingsAjaxService.getAllListings().then((response) => {
             if(!response.error){
-                console.log(response.data);
+                // console.log(response.data);
                 $scope.pageListings = response.data;
             } else {
                 console.log(response.data + ', ' + error);
@@ -46,7 +46,7 @@ HouseListingApp.controller("HouseListingController", ['$scope', '$http', '$timeo
         $scope.isLoading = true;
         $houseListingsAjaxService.getListingsByZipCode(zipCode).then((response) => {
             if(!response.error){
-                console.log(response.data);
+                // console.log(response.data);
                 $scope.pageListings = response.data;
             } else {
                 console.log(response.data + ', ' + error);
@@ -60,7 +60,7 @@ HouseListingApp.controller("HouseListingController", ['$scope', '$http', '$timeo
         $scope.isLoading = true;
         $houseListingsAjaxService.getListingsByState(twoLetterState).then((response) => {
             if(!response.error){
-                console.log(response.data);
+                // console.log(response.data);
                 $scope.pageListings = response.data;
             } else {
                 console.log(response.data + ', ' + error);
@@ -109,6 +109,87 @@ HouseListingApp.controller("HouseListingSearchBarController", ['$scope', '$http'
         $scope.searchListings(key); //From parent controller.
     };
 
+}]);
+
+HouseListingApp.controller("AllHousesGoogleMapsController", ['$scope', function ($scope) {
+
+    $scope.initializeGoogleMap = function(targetAddresses = false){
+
+        console.log('Initializing Google Map.');
+        console.log(targetAddresses);
+        $scope.hasListings = false;
+
+        if(targetAddresses.length > 0){
+            $scope.hasListings = true;
+            //Set parameters.
+            let mapDivId = 'map'; //This is the div id the map will display in.
+
+            //Set initial Google Map.  The location will change later.
+            let map = new google.maps.Map(document.getElementById(mapDivId), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8
+            });
+
+            let geocoder = new google.maps.Geocoder();
+
+            let markers = [];
+
+            function geoCodeAsPromise(_target, listingNumber){
+                return new Promise((resolve, reject) => {
+                    //Set a time out to slow things down and not get throttled by Google.
+                    setTimeout(function(){
+                        geocoder.geocode({ 'address': _target}, function(geocodeResults, geoCodeStatus){
+                            if(geoCodeStatus === google.maps.GeocoderStatus.OK){
+                                //Address has been located.
+                                let location = geocodeResults[0].geometry.location;
+
+                                // let formatted_address = geocodeResults[0].formatted_address;
+
+                                map.setCenter(location); //Center the map on the found location.
+
+                                //Create a marker for the house.
+                                let marker = new google.maps.Marker({
+                                    map: map,
+                                    position: location,
+                                    label: { text: listingNumber.toString(), color: 'white' }
+                                });
+                                markers.push(marker);
+                                // resolve();
+                            } else {
+                                console.log('There was a problem locating this address.');
+                                // reject();
+                            }
+                            resolve(true); //Just resolve no matter what for now.
+                        });
+                    }, 100); //0.1 second delay.
+                });
+            }
+
+            let promises = [];
+
+            for(const targetAddress of targetAddresses){
+                let targetAddressFormatted =
+                    targetAddress.address_street + ', ' +
+                    targetAddress.address_city + ' ' +
+                    targetAddress.address_state + ', ' +
+                    targetAddress.address_zip;
+                promises.push(geoCodeAsPromise(targetAddressFormatted, targetAddress.listingNumber));
+            }
+
+            //Wait for all promises from geoCoder to return before setting the map boundaries.
+            Promise.all(promises).then((promiseValues) => {
+                //Extend the boundary of the map to encompass all markers.
+                let bounds = new google.maps.LatLngBounds();
+                for(let i = 0; i < markers.length; i++){
+                    bounds.extend(new google.maps.LatLng(markers[i].getPosition().lat(), markers[i].getPosition().lng()));
+                }
+                map.fitBounds(bounds);
+                map.setCenter(bounds.getCenter());
+            });
+
+        }
+
+    };
 }]);
 
 HouseListingApp.controller("HouseDetailsGoogleMapsController", ['$scope', function ($scope) {

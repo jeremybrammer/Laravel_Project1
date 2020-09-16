@@ -51,10 +51,9 @@
                 <!-- END Search Bar -->
 
                 <!-- START Google Map -->
-                {{-- <div ng-controller="GoogleMapsController" ng-init="initializeGoogleMap()">
+                <div ng-controller="AllHousesGoogleMapsController" ng-init="initializeGoogleMap(pageListings)" ng-if="!isLoading" ng-show="hasListings">
                     <div id="map" style="height: 300px;"></div>
-                    <div id="panorama" style="height: 300px;"></div>
-                </div> --}}
+                </div>
                 <!-- END Google Map -->
 
                 <div class="card" ng-show="!isLoading">
@@ -67,6 +66,7 @@
                                 <div class="house_list_item_panel panel panel-default container">
                                     <div class="panel-heading row">
                                         <span class="col-sm-8" style="padding: 0;">
+                                            <span class="dot">@{{ house.listingNumber }}</span>
                                             <a href="@{{ APP_URL + '/houses/' + house.id }}">
                                                 @{{ house.address_street }},
                                                 @{{ house.address_city }} @{{ house.address_state }},
