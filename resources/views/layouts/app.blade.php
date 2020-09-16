@@ -9,6 +9,19 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Load Google Maps API asynchronously. -->
+    {{-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbCvHlmlfAsqCMHM3ky-G4fZVFy-2WGXA&callback=initMap&libraries=&v=weekly"
+      defer
+    ></script> --}}
+
+    <!-- Load Google Maps API synchronously. -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbCvHlmlfAsqCMHM3ky-G4fZVFy-2WGXA&libraries=&v=weekly"
+    ></script>
+
     <!-- Get base url of app for use in javascript -->
     <script type="text/javascript">
         var APP_URL = {!! json_encode(url('/')) !!}

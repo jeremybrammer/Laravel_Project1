@@ -1,4 +1,4 @@
-const { reject } = require('lodash');
+const { reject, map } = require('lodash');
 
 require('./bootstrap');
 
@@ -84,7 +84,7 @@ HouseListingApp.controller("HouseListingController", ['$scope', '$http', '$timeo
 
 HouseListingApp.controller("HouseListingSearchBarController", ['$scope', '$http', function ($scope, $http) {
 
-    $scope.init = function(){
+    $scope.initSearchBar = function(){
         console.log('House listing search bar initializing...');
         $scope.houseListingSearchBarOptions = [
             'All Listings',
@@ -109,6 +109,80 @@ HouseListingApp.controller("HouseListingSearchBarController", ['$scope', '$http'
         $scope.searchListings(key); //From parent controller.
     };
 
+}]);
+
+HouseListingApp.controller("HouseDetailsGoogleMapsController", ['$scope', function ($scope) {
+
+    $scope.initializeGoogleMap = function(targetAddress = '112 East Hazel Street, Clarence MO, 63437'){
+
+        //Set parameters.
+        let mapDivId = 'map'; //This is the div id the map will display in.
+        let streetViewDivId = 'panorama'; //This is the div id the street view will display in.
+        let panoramaSearchRadiusIncrementInMeters = 50; //50 meters is minimum search radius allowed by API.
+        let panoramaMaxSearchRadiusAllowed = 500; //The higher this is, the more calls it can make, and the more money it will cost.
+
+        //Set initial Google Map.  The location will change later.
+        let map = new google.maps.Map(document.getElementById(mapDivId), {
+            center: { lat: -34.397, lng: 150.644 },
+            zoom: 15
+        });
+
+        let geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'address': targetAddress}, function(geocodeResults, geoCodeStatus){
+            if(geoCodeStatus === google.maps.GeocoderStatus.OK){
+                //Address has been located.
+                let location = geocodeResults[0].geometry.location;
+                // let formatted_address = geocodeResults[0].formatted_address;
+
+                map.setCenter(location); //Center the map on the found location.
+
+                //Create a marker for the house.
+                let marker = new google.maps.Marker({
+                    map: map,
+                    position: location
+                    // label: formatted_address
+                });
+
+                let streetViewService = new google.maps.StreetViewService();
+
+                //Recursive function to find nearest street view to given address.
+                function findPanorama(radius){
+                    let panoramaRequest = {
+                        location: location,
+                        preference: google.maps.StreetViewPreference.NEAREST,
+                        radius: radius,
+                        source: google.maps.StreetViewSource.OUTDOOR
+                    };
+                    streetViewService.getPanorama(panoramaRequest, function(panoramaData, panoramaStatus){
+                        if(panoramaStatus == google.maps.StreetViewStatus.OK){
+                            let panoramaOptions = {
+                                pano: panoramaData.location.pano,
+                                addressControl: false,
+                                navigationControl: true,
+                                navigationControlOptions: {
+                                    style: google.maps.NavigationControlStyle.SMALL
+                                }
+                            };
+                            let panorama = new google.maps.StreetViewPanorama(document.getElementById(streetViewDivId), panoramaOptions);
+                            map.setStreetView(panorama); //Set little dude icon on map where street view is.
+                        } else {
+                            if(radius > panoramaMaxSearchRadiusAllowed){
+                                console.log('Max radius reached. No street view available.');
+                            } else {
+                                console.log('Expanding search radius.');
+                                findPanorama(radius + panoramaSearchRadiusIncrementInMeters); //Do recursion.
+                            }
+                        }
+                    });
+                }
+
+                findPanorama(panoramaSearchRadiusIncrementInMeters); //Run the function with starting radius.
+
+            } else {
+                console.log('There was a problem locating this address.');
+            }
+        });
+    };
 }]);
 
 HouseListingApp.factory("$houseListingsAjaxService", function($http){

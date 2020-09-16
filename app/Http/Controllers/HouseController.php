@@ -30,7 +30,11 @@ class HouseController extends Controller
     }
 
     public function show(House $house){
-        return view('houses.show')->with('house', $house);
+        $dataToPassToView = [
+            'house' => $house,
+            'houseAddressString' => $house->address_street . ", " . $house->address_city . " " . $house->address_state . ", " . $house->address_zip
+        ];
+        return view('houses.show')->with($dataToPassToView);
     }
 
     public function edit(House $house){

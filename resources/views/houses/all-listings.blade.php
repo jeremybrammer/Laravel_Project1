@@ -19,7 +19,7 @@
             <div class="col-md-8">
 
                 <!-- START Search Bar -->
-                <div class="input-group" ng-controller="HouseListingSearchBarController" ng-init="init();">
+                <div class="input-group" ng-controller="HouseListingSearchBarController" ng-init="initSearchBar();">
                     <div class="input-group-prepend">
                         <button type="button" class="btn btn-outline-secondary">@{{ houseListingSearchBarSelectedOption }}</button>
                         <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -50,10 +50,16 @@
                 </div>
                 <!-- END Search Bar -->
 
+                <!-- START Google Map -->
+                {{-- <div ng-controller="GoogleMapsController" ng-init="initializeGoogleMap()">
+                    <div id="map" style="height: 300px;"></div>
+                    <div id="panorama" style="height: 300px;"></div>
+                </div> --}}
+                <!-- END Google Map -->
+
                 <div class="card" ng-show="!isLoading">
                     <div class="card-header">All Houses for Sale</div>
                     <div class="card-body">
-
 
                         <!-- START Angular.js displays data -->
                         <ul class="house_listing" ng-if="pageListings.length > 0">
@@ -79,7 +85,6 @@
                         </ul>
                         <p ng-if="pageListings.length < 1">No listings found.</p>
                     <!-- END Angular.js displays data -->
-
 
                     <!-- START Laravel displays data -->
                     <?php /*
@@ -116,8 +121,6 @@
                     @endif
                     */ ?>
                     <!-- END Laravel displays data -->
-
-
 
                     </div>
                 </div>

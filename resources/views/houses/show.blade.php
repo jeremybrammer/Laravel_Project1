@@ -17,9 +17,7 @@
                     <div class="card-header">
                         <div class="panel-heading row">
                             <span class="col-sm-8" style="padding: 0;">
-                                {{ $house->address_street }},
-                                {{ $house->address_city }} {{ $house->address_state }},
-                                {{ $house->address_zip }}
+                                {{ $houseAddressString }}
                             </span>
                             <span class="col-sm-4" style="text-align: right; padding: 0;">
                                 @if($house->sold)
@@ -34,6 +32,15 @@
                         <p class="col-sm-12">{{ $house->description }}</p>
                     </div>
                 </div>
+
+                <!-- START Google Map -->
+                <div
+                    ng-controller="HouseDetailsGoogleMapsController" ng-init="initializeGoogleMap('{{ $houseAddressString }}')">
+                    <div id="map" style="height: 300px;"></div>
+                    <div id="panorama" style="height: 200px;"></div>
+                </div>
+                <!-- END Google Map -->
+
             </div>
         </div>
     </div>
