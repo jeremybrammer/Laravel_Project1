@@ -117,17 +117,18 @@ HouseListingApp.controller("AllHousesGoogleMapsController", ['$scope', function 
 
         console.log('Initializing Google Map.');
         console.log(targetAddresses);
-        $scope.hasListings = false;
+        $scope.mapIsReady = false;
 
         if(targetAddresses.length > 0){
-            $scope.hasListings = true;
             //Set parameters.
             let mapDivId = 'map'; //This is the div id the map will display in.
 
             //Set initial Google Map.  The location will change later.
             let map = new google.maps.Map(document.getElementById(mapDivId), {
                 center: { lat: -34.397, lng: 150.644 },
-                zoom: 8
+                zoom: 8,
+                streetViewControl: false,
+                mapTypeId: google.maps.MapTypeId.SATELLITE
             });
 
             let geocoder = new google.maps.Geocoder();
@@ -136,57 +137,77 @@ HouseListingApp.controller("AllHousesGoogleMapsController", ['$scope', function 
 
             function geoCodeAsPromise(_target, listingNumber){
                 return new Promise((resolve, reject) => {
-                    //Set a time out to slow things down and not get throttled by Google.
-                    setTimeout(function(){
-                        geocoder.geocode({ 'address': _target}, function(geocodeResults, geoCodeStatus){
-                            if(geoCodeStatus === google.maps.GeocoderStatus.OK){
-                                //Address has been located.
-                                let location = geocodeResults[0].geometry.location;
+                    geocoder.geocode({ 'address': _target}, function(geocodeResults, geoCodeStatus){
+                        if(geoCodeStatus === google.maps.GeocoderStatus.OK){
+                            //Address has been located.
+                            let location = geocodeResults[0].geometry.location;
 
-                                // let formatted_address = geocodeResults[0].formatted_address;
+                            // let formatted_address = geocodeResults[0].formatted_address;
 
-                                map.setCenter(location); //Center the map on the found location.
+                            map.setCenter(location); //Center the map on the found location.
 
-                                //Create a marker for the house.
-                                let marker = new google.maps.Marker({
-                                    map: map,
-                                    position: location,
-                                    label: { text: listingNumber.toString(), color: 'white' }
-                                });
-                                markers.push(marker);
-                                // resolve();
-                            } else {
-                                console.log('There was a problem locating this address.');
-                                // reject();
-                            }
-                            resolve(true); //Just resolve no matter what for now.
-                        });
-                    }, 100); //0.1 second delay.
+                            //Create a marker for the house.
+                            let marker = new google.maps.Marker({
+                                map: map,
+                                position: location,
+                                label: { text: listingNumber.toString(), color: 'white' }
+                            });
+                            markers.push(marker);
+                            // resolve();
+                        } else {
+                            console.log('There was a problem locating this address.');
+                            console.log(_target);
+                            // reject();
+                        }
+                        resolve(true); //Just resolve no matter what for now.
+                    });
                 });
             }
 
             let promises = [];
 
-            for(const targetAddress of targetAddresses){
-                let targetAddressFormatted =
-                    targetAddress.address_street + ', ' +
-                    targetAddress.address_city + ' ' +
-                    targetAddress.address_state + ', ' +
-                    targetAddress.address_zip;
-                promises.push(geoCodeAsPromise(targetAddressFormatted, targetAddress.listingNumber));
+            function intervalLoop(loopLimit){
+                let loopIteration = 0;
+                let interval = setInterval(() => {
+                    //Make API calls here...
+                    console.log('Firing geocode call (' + Date.now() + ').');
+                    let targetAddressFormatted =
+                        targetAddresses[loopIteration].address_street + ', ' +
+                        targetAddresses[loopIteration].address_city + ' ' +
+                        targetAddresses[loopIteration].address_state + ', ' +
+                        targetAddresses[loopIteration].address_zip;
+                    promises.push(geoCodeAsPromise(targetAddressFormatted, targetAddresses[loopIteration].listingNumber));
+
+                    loopIteration++; //Increment the count.
+                    if(loopIteration === loopLimit){
+                        clearInterval(interval);
+                        //Proceed with the post-api-call code here...
+                        $scope.mapIsReady = true;
+                        $scope.$apply();
+                        //Wait for all promises from geoCoder to return before setting the map boundaries.
+                        Promise.all(promises).then((promiseValues) => {
+                            //Extend the boundary of the map to encompass all markers.
+                            let bounds = new google.maps.LatLngBounds();
+                            for(let i = 0; i < markers.length; i++){
+                                bounds.extend(new google.maps.LatLng(markers[i].getPosition().lat(), markers[i].getPosition().lng()));
+                            }
+                            map.fitBounds(bounds);
+                            map.setCenter(bounds.getCenter());
+
+                            //Back off the zoom some if needed.
+                            let listener = google.maps.event.addListener(map, "idle", function(){
+                                if(map.getZoom() > 16){
+                                    map.setZoom(16);
+                                }
+                                google.maps.event.removeListener(listener);
+                            });
+                        });
+                    }
+                }, 500); //Fire off one every 0.25 seconds.
             }
-
-            //Wait for all promises from geoCoder to return before setting the map boundaries.
-            Promise.all(promises).then((promiseValues) => {
-                //Extend the boundary of the map to encompass all markers.
-                let bounds = new google.maps.LatLngBounds();
-                for(let i = 0; i < markers.length; i++){
-                    bounds.extend(new google.maps.LatLng(markers[i].getPosition().lat(), markers[i].getPosition().lng()));
-                }
-                map.fitBounds(bounds);
-                map.setCenter(bounds.getCenter());
-            });
-
+            intervalLoop(targetAddresses.length); //Run the intervalLoop this many times.
+        } else {
+            $scope.mapIsReady = true;
         }
 
     };
@@ -205,7 +226,8 @@ HouseListingApp.controller("HouseDetailsGoogleMapsController", ['$scope', functi
         //Set initial Google Map.  The location will change later.
         let map = new google.maps.Map(document.getElementById(mapDivId), {
             center: { lat: -34.397, lng: 150.644 },
-            zoom: 15
+            zoom: 16,
+            mapTypeId: google.maps.MapTypeId.SATELLITE
         });
 
         let geocoder = new google.maps.Geocoder();

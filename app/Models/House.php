@@ -19,4 +19,8 @@ class House extends Model
         'price',
         'sold'
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

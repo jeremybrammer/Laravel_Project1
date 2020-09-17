@@ -32,7 +32,8 @@ class HouseController extends Controller
     public function show(House $house){
         $dataToPassToView = [
             'house' => $house,
-            'houseAddressString' => $house->address_street . ", " . $house->address_city . " " . $house->address_state . ", " . $house->address_zip
+            'houseAddressString' => $house->address_street . ", " . $house->address_city . " " . $house->address_state . ", " . $house->address_zip,
+            'listedBy' => $house->user->name
         ];
         return view('houses.show')->with($dataToPassToView);
     }
@@ -76,12 +77,14 @@ class HouseController extends Controller
     public function allListingsAjax(){
         $houses = House::all()->sortBy('created_at');
         $this->numberListings($houses);
+        $this->addUserNameToListings($houses);
         return response()->json($houses);
     }
 
     public function getListingsByZipCodeAjax($zipCode){
         $houses = House::where('address_zip', 'LIKE', '%' . $zipCode .'%')->orderBy('created_at')->get();
         $this->numberListings($houses);
+        $this->addUserNameToListings($houses);
         return response()->json($houses);
     }
 
@@ -89,12 +92,20 @@ class HouseController extends Controller
         $twoLetterState = strtoupper($twoLetterState);
         $houses = House::where('address_state', $twoLetterState)->orderBy('created_at')->get();
         $this->numberListings($houses);
+        $this->addUserNameToListings($houses);
         return response()->json($houses);
     }
 
     private function numberListings($listings){
         for($i = 0; $i < count($listings); $i++){
             $listings[$i]->listingNumber = $i + 1;
+        }
+    }
+
+    private function addUserNameToListings($listings){
+        for($i = 0; $i < count($listings); $i++){
+            $listings[$i]->listingNumber = $i + 1;
+            $listings[$i]->listedBy = $listings[$i]->user->name;
         }
     }
 

@@ -38,3 +38,7 @@ ul.house_listing li{
     background-color: tomato;
     color: white;
 }
+
+.googleMapWithHeight{
+    height: 300px;
+}

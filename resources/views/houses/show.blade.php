@@ -16,16 +16,17 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="panel-heading row">
-                            <span class="col-sm-8" style="padding: 0;">
-                                {{ $houseAddressString }}
-                            </span>
+                            <div class="col-sm-8" style="font-size: 0.8em;">Listed By: {{ $listedBy }}</div>
                             <span class="col-sm-4" style="text-align: right; padding: 0;">
                                 @if($house->sold)
-                                    <span>Sold</span>
+                                <span>Sold</span>
                                 @else
-                                    <span>${{ $house->price }}</span>
+                                <span>${{ $house->price }}</span>
                                 @endif
                             </span>
+                        </div>
+                        <div class="col-sm-12" style="padding: 0;">
+                            {{ $houseAddressString }}
                         </div>
                     </div>
                     <div class="card-body">

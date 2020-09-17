@@ -51,8 +51,14 @@
                 <!-- END Search Bar -->
 
                 <!-- START Google Map -->
-                <div ng-controller="AllHousesGoogleMapsController" ng-init="initializeGoogleMap(pageListings)" ng-if="!isLoading" ng-show="hasListings">
-                    <div id="map" style="height: 300px;"></div>
+                <div ng-controller="AllHousesGoogleMapsController" ng-init="initializeGoogleMap(pageListings)" ng-if="!isLoading">
+                    <div id="map" ng-class="{ googleMapWithHeight: pageListings.length > 0 }" ng-show="mapIsReady"></div>
+                    <!-- START loading pane -->
+                    <div ng-show="!mapIsReady">
+                        <img src="{{ asset('images/loading.gif') }}" width="200px" style="display: block; margin: 0 auto;" />
+                        <p style="display: block; text-align: center;">Loading Google Map</p>
+                    </div>
+                    <!-- END loading pane -->
                 </div>
                 <!-- END Google Map -->
 
@@ -67,6 +73,7 @@
                                     <div class="panel-heading row">
                                         <span class="col-sm-8" style="padding: 0;">
                                             <span class="dot">@{{ house.listingNumber }}</span>
+                                            <span style="display: table-cell; padding-left: 10px; font-size: 0.8em;">Listed By: @{{ house.listedBy }}</span>
                                             <a href="@{{ APP_URL + '/houses/' + house.id }}">
                                                 @{{ house.address_street }},
                                                 @{{ house.address_city }} @{{ house.address_state }},
