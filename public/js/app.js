@@ -73981,7 +73981,7 @@ HouseListingApp.controller("AllHousesGoogleMapsController", ['$scope', function 
               });
             });
           }
-        }, 500); //Fire off one every 0.25 seconds.
+        }, 500); //Fire off one every 0.5 seconds.
       };
 
       //Set parameters.
