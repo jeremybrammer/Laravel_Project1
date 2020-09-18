@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
 
-Route::redirect('/', '/home');
+Route::redirect('/', '/houses/all');
 
 Route::middleware(['verified'])->group(function(){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
